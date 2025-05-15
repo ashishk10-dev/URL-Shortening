@@ -70,6 +70,7 @@ public class UrlMappingService {
 				.toList(); //==>//collect(Collectors.toUnmodifiableList());	
 										
 	}
+	
 ////////
 	public List<ClickEventDTO> getClickEventsByDate(String shortUrl, LocalDateTime start, LocalDateTime end) {
 		UrlMapping urlMapping=urlMappingRepository.findByShortUrl(shortUrl);
