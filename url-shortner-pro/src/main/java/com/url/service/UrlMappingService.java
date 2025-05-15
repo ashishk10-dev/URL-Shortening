@@ -1,7 +1,9 @@
 package com.url.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.url.controller.UrlMappingController;
 import com.url.dtos.ClickEventDTO;
 import com.url.dtos.UrlMappingDTO;
+import com.url.models.ClickEvent;
 import com.url.models.UrlMapping;
 import com.url.models.User;
 import com.url.repository.ClickEventRepository;
@@ -90,6 +93,16 @@ public class UrlMappingService {
 					.collect(Collectors.toList());
 		}
 		return null;
+	}
+
+	public Map<LocalDate, Long> getTotalClicksByUserAndDate(User user, LocalDate start, LocalDate end) {
+		List<UrlMapping> urlMappings=urlMappingRepository.findByUser(user);
+		List<ClickEvent> clickEvents=clickEventRepository.findByUrlMappingInAndClickDateBetween
+														(urlMappings, start.atStartOfDay(), end.plusDays(1).atStartOfDay());
+		
+		return clickEvents.stream()
+				.collect(Collectors.groupingBy
+				(click -> click.getClickDate().toLocalDate(),Collectors.counting()));
 	}
 	
 }
